@@ -36,5 +36,13 @@
       "not dead",
       "not op_mini all"
     ]
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/max-validator.es.js",
+      "default": "./dist/max-validator.es.js",
+      "require": "./dist/max-validator.js"
+    },
+    "./package.json": "./package.json"
   }
 }
