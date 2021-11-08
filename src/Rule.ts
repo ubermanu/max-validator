@@ -11,11 +11,11 @@ export class Rule {
     this.errorMessage = errorMessage
   }
 
-  test(value: string, params: object): boolean {
-    return this.method(value, params) !== true
+  test(value: any, ...params: any): boolean {
+    return this.method(value, ...params) === true
   }
 
-  validate(value: string, params: object): boolean {
+  validate(value: any, ...params: any): boolean {
     if (this.test(value, params)) {
       return true
     }
