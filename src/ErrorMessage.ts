@@ -1,10 +1,10 @@
 import { reduce } from './util'
 
-export default class ErrorMessage extends Error {
-  constructor(message: string, params: object) {
+export class ErrorMessage extends Error {
+  constructor(message: string, ...params: any) {
     const formattedMessage = reduce(
       params,
-      (m: any, v: any, k: any) => m.replace(`:${k}`, v),
+      (m: any, val: any, key: any) => m.replace(`%${key}`, val),
       message
     )
     super(formattedMessage)
