@@ -1,25 +1,28 @@
 import { Validation } from './Validation'
 import { forEach } from './util'
-import { Ruleset } from './RulesetParser'
+import { Rule } from './Rule'
 
 export class Schema {
-  ruleset: Ruleset[]
+  ruleset: Rule[][]
 
-  constructor(ruleset: Ruleset[]) {
+  constructor(ruleset: Rule[][]) {
     this.ruleset = ruleset
   }
 
-  validate(data: object): Validation {
+  /**
+   * Validate the given data against the schema.
+   */
+  public validate(data: object): Validation {
     const validation = new Validation()
 
     forEach(this.ruleset, (checks: any, propName: string) => {
-      forEach(checks, (checkFunction: Function, ruleName: string) => {
+      forEach(checks, (rule: Rule) => {
         // @ts-ignore
-        const result = checkFunction(data[propName])
-        if (result === true) {
+        if (rule.test(data[propName])) {
           return
+        } else {
+          validation.addError(propName, rule.getName(), rule.getErrorMessage())
         }
-        validation.addError(propName, ruleName, new Error('Error'))
       })
     })
 

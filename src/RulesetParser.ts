@@ -1,20 +1,8 @@
-import {
-  forEach,
-  isArray,
-  isFunction,
-  isPlainObject,
-  isString,
-  mapValues,
-} from './util'
+import { forEach, isArray, isFunction, isPlainObject, isString, mapValues } from './util'
 import * as initialRules from './initialRules'
 import { Rule } from './Rule'
 
 let anonymousIndex = 0
-
-// TODO: Values must be rules
-export interface Ruleset {
-  [key: string]: Function
-}
 
 export class RulesetParser {
   ruleSeparator = '|'
@@ -52,7 +40,7 @@ export class RulesetParser {
     return this
   }
 
-  public parse(config: object): Ruleset[] {
+  public parse(config: object): Rule[][] {
     // @ts-ignore
     return mapValues(config, (definitions: any, prop: string) => {
       if (isString(definitions)) {
@@ -69,67 +57,68 @@ export class RulesetParser {
   /**
    * @example ['required', 'max:20', fn() => {}]
    */
-  protected parseArrayDefinitions(config: any[]): Ruleset {
-    const ruleset: Ruleset = {}
+  protected parseArrayDefinitions(config: any[]): Rule[] {
+    let rules: Rule[] = []
 
     forEach(config, (definition: any) => {
       if (isString(definition)) {
-        Object.assign(ruleset, this.parseStringDefinitions(definition))
+        rules = rules.concat(this.parseStringDefinitions(definition))
       } else if (isFunction(definition)) {
-        ruleset[`anonymous_${anonymousIndex++}`] = definition
+        const name = `anonymous_${anonymousIndex++}`
+        const rule = new Rule(name, definition)
+        rules.push(rule)
       } else {
-        throw new Error(
-          `Couldn't parse the schema, unsupported rule type: ${typeof definition}`
-        )
+        throw new Error(`Couldn't parse the schema, unsupported rule type: ${typeof definition}`)
       }
     })
 
-    return ruleset
+    return rules
   }
 
   /**
    * @example {required: true, in_array: [1, 2, 3, 4, 5] ... , fn() => {}}
    */
-  protected parseObjectDefinitions(config: object): Ruleset {
-    let ruleset: Ruleset = {}
+  protected parseObjectDefinitions(config: object): Rule[] {
+    let rules: Rule[] = []
 
     forEach(config, (definition: any, name: string) => {
       if (isFunction(definition)) {
-        ruleset[name] = (value: any) => definition(value)
+        const rule = new Rule(name, (value: any) => definition(value))
+        rules.push(rule)
       } else {
         const args = isArray(definition) ? definition : [definition]
-        const fn = this.getRuleFunction(name)
-        ruleset[name] = (value: any) => fn(value, ...args)
+        const fn = this.getRule(name).method
+        const rule = new Rule(name, (value: any) => fn(value, ...args))
+        rules.push(rule)
       }
     })
 
-    return ruleset
+    return rules
   }
 
   /**
    * @example 'required|min:1|max:20'
    */
-  protected parseStringDefinitions(config: string): Ruleset {
+  protected parseStringDefinitions(config: string): Rule[] {
     const defs = config.split(this.ruleSeparator).filter((v) => v)
-    const ruleset: Ruleset = {}
+    const rules: Rule[] = []
 
     forEach(defs, (definition: string) => {
       const parts = definition.split(this.ruleParamSeparator)
       const name = parts[0].trim()
-      const fn = this.getRuleFunction(name)
-      const args = isString(parts[1])
-        ? parts[1].split(this.paramsSeparator)
-        : []
-      ruleset[name] = (value: any) => fn(value, ...args)
+      const fn = this.getRule(name).method
+      const args = isString(parts[1]) ? parts[1].split(this.paramsSeparator) : []
+      const rule = new Rule(name, (value: any) => fn(value, ...args))
+      rules.push(rule)
     })
 
-    return ruleset
+    return rules
   }
 
-  protected getRuleFunction(name: string) {
+  protected getRule(name: string) {
     if (!this.rules.has(name)) {
       throw new Error(`The validation method "${name}" does not exist`)
     }
-    return this.rules.get(name).method
+    return this.rules.get(name)
   }
 }

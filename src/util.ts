@@ -38,10 +38,7 @@ export function map(o: any, fn: any) {
 }
 
 export function reduce(o: any, fn: any, initial: any) {
-  return Object.entries(o).reduce(
-    (prev, [i, curr]) => fn(prev, curr, i),
-    initial
-  )
+  return Object.entries(o).reduce((prev, [i, curr]) => fn(prev, curr, i), initial)
 }
 
 export function keys(o: object): string[] {
@@ -50,11 +47,7 @@ export function keys(o: object): string[] {
 
 export function find(o: object, where: any[]) {
   const w = Object.entries(where)
-  return first(
-    Object.values(o).filter(
-      (e) => w.length === w.filter(([k, v]) => e[k] === v).length
-    )
-  )
+  return first(Object.values(o).filter((e) => w.length === w.filter(([k, v]) => e[k] === v).length))
 }
 
 export function has(object: object, key: string): boolean {

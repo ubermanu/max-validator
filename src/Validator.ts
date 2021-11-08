@@ -3,7 +3,7 @@ import { RulesetParser } from './RulesetParser'
 import { Rule } from './Rule'
 
 export class Validator {
-  schema: Schema
+  schema: Schema = null
   defaultMessage: string = 'Invalid value'
   rulesetParser: RulesetParser = new RulesetParser()
 

@@ -1,19 +1,38 @@
+import { has, size } from './util'
+
+/**
+ * FIXME: Remove the ts-ignore markups
+ */
 export class Validation {
-  protected errors: Map<string, Error> = new Map()
+  protected errors: object = {}
 
-  addError(field: string, ruleName: string, message: Error) {
-    this.errors.set(field, message)
+  public addError(field: string, ruleName: string, message: string) {
+    if (!has(this.errors, field)) {
+      // @ts-ignore
+      this.errors[field] = []
+    }
+    // @ts-ignore
+    this.errors[field][ruleName] = message
+    return this
   }
 
-  hasError(): boolean {
-    return this.errors.size > 0
+  public hasError(): boolean {
+    return size(this.errors) > 0
   }
 
-  isError(prop: string) {
-    return this.errors.has(prop)
+  public isError(field: string, ruleName: string = null): boolean {
+    return this.getError(field, ruleName) !== undefined
   }
 
-  getError(prop: string) {
-    return this.errors.get(prop)
+  public getError(field: string, ruleName: string = null): string {
+    if (!has(this.errors, field)) {
+      return undefined
+    }
+    if (ruleName) {
+      // @ts-ignore
+      return has(this.errors[field], ruleName) ? this.errors[field][ruleName] : undefined
+    }
+    // @ts-ignore
+    return this.errors[field].join(', ')
   }
 }

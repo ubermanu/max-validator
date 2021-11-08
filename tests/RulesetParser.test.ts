@@ -1,8 +1,9 @@
-import { Ruleset, RulesetParser } from '../src/RulesetParser'
-import { keys } from '../src/util'
+import { RulesetParser } from '../src/RulesetParser'
+import { Rule } from '../src/Rule'
+import { size } from '../src/util'
 
 const parser = new RulesetParser()
-let ruleset: Ruleset[] = []
+let ruleset: Rule[][] = []
 
 it('should parse schemes with strings as rules', () => {
   const scheme = {
@@ -13,9 +14,10 @@ it('should parse schemes with strings as rules', () => {
   expect(() => (ruleset = parser.parse(scheme))).not.toThrowError()
 
   // @ts-ignore
-  expect(keys(ruleset.name)).toEqual(['required', 'string', 'min'])
+  expect(size(ruleset.name)).toEqual(3)
+
   // @ts-ignore
-  expect(keys(ruleset.age)).toEqual(['numeric', 'min'])
+  expect(size(ruleset.age)).toEqual(2)
 })
 
 it('should parse schemes with an array of rules', () => {
@@ -27,15 +29,10 @@ it('should parse schemes with an array of rules', () => {
   expect(() => (ruleset = parser.parse(scheme))).not.toThrowError()
 
   // @ts-ignore
-  expect(keys(ruleset.name)).toEqual([
-    'required',
-    'string',
-    'min',
-    'anonymous_0',
-  ])
+  expect(size(ruleset.name)).toEqual(4)
 
   // @ts-ignore
-  expect(keys(ruleset.age)).toEqual(['numeric', 'min'])
+  expect(size(ruleset.age)).toEqual(2)
 })
 
 it('should parse schemes with an object of rules', () => {
@@ -57,8 +54,8 @@ it('should parse schemes with an object of rules', () => {
   expect(() => (ruleset = parser.parse(scheme))).not.toThrowError()
 
   // @ts-ignore
-  expect(keys(ruleset.name)).toEqual(['required', 'string', 'min', 'test'])
+  expect(size(ruleset.name)).toEqual(4)
 
   // @ts-ignore
-  expect(keys(ruleset.age)).toEqual(['numeric', 'min'])
+  expect(size(ruleset.age)).toEqual(2)
 })
