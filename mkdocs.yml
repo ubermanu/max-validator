@@ -1,0 +1,27 @@
+site_name: Max Validator
+site_url: https://ubermanu.github.io/max-validator/
+
+repo_name: ubermanu/max-validator
+repo_url: https://github.com/ubermanu/max-validator
+edit_uri: ""
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: red
+      accent: red
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - Schema: schema.md
+  - Rules: rules.md
+  - Result: result.md
+  - Customize: customize.md
