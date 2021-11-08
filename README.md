@@ -1,9 +1,9 @@
 # Documentation
 
-- [Instalation](#instalation)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Extending Validator](#extending-validator)
-- [Aviable Validation Rules](#aviable-validation-rules)
+- [Available Validation Rules](#available-validation-rules)
 - [Use With React.js](#use-with-react.js)
 - [Messages](#messages)
 - [Change rule separators](#change-rule-separators)
@@ -150,7 +150,7 @@ V.validate({
 })
 ```
 
-## Aviable Validation Rules
+## Available Validation Rules
 
 ```javascript
 /**
