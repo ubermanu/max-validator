@@ -1,4 +1,4 @@
-import { isArray, isPlainObject, isString } from './util'
+import { isArray, isPlainObject, isString, size } from './util'
 import { Rule } from './Rule'
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -181,7 +181,12 @@ export const phone = new Rule(
 
 export const required = new Rule(
   'required',
-  (value: any) => value !== undefined && value !== null,
+  (value: any) => {
+    if (typeof value === 'object' && value != null) {
+      return size(value) > 0
+    }
+    return ![undefined, null, false, ''].includes(value)
+  },
   ':name is required'
 )
 
