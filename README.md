@@ -1,29 +1,22 @@
-# Documentation
+# Max Validator
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Extending Validator](#extending-validator)
-- [Available Validation Rules](#available-validation-rules)
-- [Use With React.js](#use-with-react.js)
-- [Messages](#messages)
-- [Change rule separators](#change-rule-separators)
-- [Contributing](#contributing)
-- [License](#license)
+Fast and small validation framework based on schemas, inspired by Laravel.
 
-## Installation
+## Install
 
-You can install `max-validator` using npm or yarn package manager:
+You can install `max-validator` using ES modules:
 
-```bash
-npm i max-validator --save
-#or
-npm install max-validator --save
-#or
-yarn add max-validator
-
+```js
+import V from "https://cdn.skypack.dev/@shrnts/max-validator";
 ```
 
-### Usage
+or using any package manager:
+
+```bash
+npm i @shrtns/max-validator
+```
+
+## Usage
 
 ```javascript
 var V = require('max-validator');
