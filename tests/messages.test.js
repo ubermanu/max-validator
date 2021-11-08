@@ -4,7 +4,7 @@ import {
   setMessages,
   setDefaultMessage,
   formatMessage,
-} from './messages';
+} from '../src/messages';
 
 it('should replace the default error message', () => {
   setDefaultMessage('Custom error message');

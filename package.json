@@ -10,7 +10,7 @@
   "scripts": {
     "prepublishOnly": "rm dist/* -f && npm run build",
     "build": "rollup -c",
-    "test": "jest"
+    "test": "jest tests"
   },
   "repository": "git+https://github.com/malkhazidartsmelidze/max-validator.git",
   "keywords": [

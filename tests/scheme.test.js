@@ -1,5 +1,5 @@
-import { parseScheme } from './scheme';
-import { keys } from './util';
+import { parseScheme } from '../src/scheme';
+import { keys } from '../src/util';
 
 it('should parse schemes with strings as rules', () => {
   const scheme = {

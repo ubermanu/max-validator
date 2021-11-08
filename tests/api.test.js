@@ -1,4 +1,4 @@
-import { validate, extend } from './api';
+import { validate, extend } from '../src/api';
 
 it('should validate an object', () => {
   const data = {

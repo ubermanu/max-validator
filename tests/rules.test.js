@@ -1,4 +1,4 @@
-import { functions } from './rules';
+import { functions } from '../src/rules';
 
 it('should validate alpha/numeric characters', () => {
   const { alpha, alpha_dash, alpha_numeric } = functions;
