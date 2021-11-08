@@ -1,7 +1,7 @@
 export class Validation {
   protected errors: Map<string, Error> = new Map()
 
-  addError(field: string, message: Error) {
+  addError(field: string, ruleName: string, message: Error) {
     this.errors.set(field, message)
   }
 
