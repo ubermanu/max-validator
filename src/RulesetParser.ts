@@ -7,7 +7,7 @@ import {
   mapValues,
 } from './util'
 import * as initialRules from './initialRules'
-import Rule from './Rule'
+import { Rule } from './Rule'
 
 let anonymousIndex = 0
 

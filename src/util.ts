@@ -18,7 +18,7 @@ export function isNumber(num: any): boolean {
   return typeof num === 'number'
 }
 
-export function forEach(o: any[], fn: Function) {
+export function forEach(o: any, fn: Function) {
   return Object.entries(o).forEach(([k, v]) => fn(v, k))
 }
 
