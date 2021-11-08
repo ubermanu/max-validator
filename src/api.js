@@ -10,7 +10,7 @@ import {
   mapValues,
   size,
 } from './util';
-import { messages, formatMessage } from './messages';
+import { formatMessage, messages } from './messages';
 import { functions } from './rules';
 import { parseScheme } from './scheme';
 
