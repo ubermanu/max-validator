@@ -1,4 +1,4 @@
-import { isArray } from './util'
+import { isArray, isPlainObject, isString } from './util'
 import { Rule } from './Rule'
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -12,7 +12,7 @@ export const alpha = new Rule(
 
 export const alpha_dash = new Rule(
   'alpha_dash',
-  (value: any) => /^[a-zA-Z0-9_\-]+$/.test(value),
+  (value: any) => /^[a-zA-Z\-]+$/.test(value),
   ':name can only contain letters, dashes and underscores'
 )
 
@@ -30,7 +30,12 @@ export const array = new Rule(
 
 export const between = new Rule(
   'between',
-  (value: any, from: any, to: any) => value >= from && value <= to,
+  (value: any, from: any, to: any) => {
+    if (isString(value)) {
+      return value.length >= from && value.length <= to
+    }
+    return value >= from && value <= to
+  },
   ':name must be between :from and :to'
 )
 
@@ -129,13 +134,15 @@ export const json = new Rule(
 
 export const max = new Rule(
   'max',
-  (value: any, max: any) => value <= max,
+  (value: any, max: any) =>
+    isString(value) ? value.length <= max : value <= max,
   `:name can't be greater than :max`
 )
 
 export const min = new Rule(
   'min',
-  (value: any, min: any) => value >= min,
+  (value: any, min: any) =>
+    isString(value) ? value.length >= min : value >= min,
   `:name can't be less than :min`
 )
 
@@ -158,6 +165,12 @@ export const number = new Rule(
 )
 
 export const numeric = number
+
+export const object = new Rule(
+  'object',
+  (value: any) => isPlainObject(value),
+  ':name must be an object'
+)
 
 export const phone = new Rule(
   'phone',
