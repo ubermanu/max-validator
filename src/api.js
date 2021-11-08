@@ -1,13 +1,13 @@
 import {
   find,
   first,
-  forEach,
+  for_each,
   has,
-  isFunction,
-  isPlainObject,
-  isString,
+  is_function,
+  is_plain_object,
+  is_string,
   map,
-  mapValues,
+  map_values,
   size,
 } from './util';
 import { formatMessage, messages } from './messages';
@@ -33,7 +33,7 @@ export function extend(name, method, message = null) {
     throw `The validation method "${name}" already exists`;
   }
 
-  if (!isFunction(method)) {
+  if (!is_function(method)) {
     throw `The validation method must be a function, type given: ${typeof method}`;
   }
 
@@ -53,15 +53,15 @@ export function extend(name, method, message = null) {
  * @returns {object}
  */
 export function validate(data, scheme, callback = null) {
-  if (!isPlainObject(data) || !isPlainObject(scheme)) {
+  if (!is_plain_object(data) || !is_plain_object(scheme)) {
     throw 'Both data and scheme must be plain objects';
   }
 
   const errors = {};
   const rules = parseScheme(scheme);
 
-  forEach(rules, (checks, propName) => {
-    forEach(checks, (checkFunction, ruleName) => {
+  for_each(rules, (checks, propName) => {
+    for_each(checks, (checkFunction, ruleName) => {
       let result = checkFunction(data[propName]);
 
       if (result === true) {
@@ -69,9 +69,9 @@ export function validate(data, scheme, callback = null) {
       }
 
       let err;
-      if (isString(result)) {
+      if (is_string(result)) {
         err = result;
-      } else if (isPlainObject(result)) {
+      } else if (is_plain_object(result)) {
         err = formatMessage(ruleName, { name: propName, ...result });
       }
 
@@ -89,7 +89,7 @@ export function validate(data, scheme, callback = null) {
 
   const helper = getValidationResult(errors);
 
-  if (isFunction(callback)) {
+  if (is_function(callback)) {
     callback(helper);
   }
 
@@ -123,7 +123,7 @@ function getValidationResult(errors) {
      *
      * @type {Object}
      */
-    errors: mapValues(errors, (e) => map(e, 'err')),
+    errors: map_values(errors, (e) => map(e, 'err')),
 
     /**
      * Returns TRUE if the property has an error.

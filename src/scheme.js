@@ -1,10 +1,10 @@
 import {
-  forEach,
-  isArray,
-  isFunction,
-  isPlainObject,
-  isString,
-  mapValues,
+  for_each,
+  is_array,
+  is_function,
+  is_plain_object,
+  is_string,
+  map_values,
 } from './util';
 import { getRuleFunction } from './rules';
 
@@ -17,7 +17,7 @@ export let paramsSeparator = ',';
  * @param {string} separator
  */
 export function setRuleSeparator(separator) {
-  if (!isString(separator)) {
+  if (!is_string(separator)) {
     throw 'Separator must be string';
   }
   ruleSeparator = separator;
@@ -28,7 +28,7 @@ export function setRuleSeparator(separator) {
  * @param {string} separator
  */
 export function setRuleParamSeparator(separator) {
-  if (!isString(separator)) {
+  if (!is_string(separator)) {
     throw 'Separator must be string';
   }
   ruleParamSeparator = separator;
@@ -39,7 +39,7 @@ export function setRuleParamSeparator(separator) {
  * @param {string} separator
  */
 export function setParamsSeparator(separator) {
-  if (!isString(separator)) {
+  if (!is_string(separator)) {
     throw 'Separator must be string';
   }
   paramsSeparator = separator;
@@ -53,16 +53,16 @@ export function setParamsSeparator(separator) {
  * @return {{}} Parsed rules
  */
 export function parseScheme(scheme) {
-  return mapValues(scheme, (config, propName) => {
-    if (isString(config)) {
+  return map_values(scheme, (config, propName) => {
+    if (is_string(config)) {
       return parseStringRules(config);
     }
 
-    if (isArray(config)) {
+    if (is_array(config)) {
       return parseArrayRules(config);
     }
 
-    if (isPlainObject(config)) {
+    if (is_plain_object(config)) {
       return parseObjectRules(config);
     }
 
@@ -79,10 +79,10 @@ function parseArrayRules(config) {
   const rules = {};
   let i = 0;
 
-  forEach(config, (rule) => {
-    if (isString(rule)) {
+  for_each(config, (rule) => {
+    if (is_string(rule)) {
       Object.assign(rules, parseStringRules(rule));
-    } else if (isFunction(rule)) {
+    } else if (is_function(rule)) {
       rules[`anonymous_${i++}`] = rule;
     } else {
       throw `Couldn't parse the scheme, unsupported rule type: ${typeof rule}`;
@@ -100,11 +100,11 @@ function parseArrayRules(config) {
 function parseObjectRules(config) {
   const rules = {};
 
-  forEach(config, (option, name) => {
-    if (isFunction(option)) {
+  for_each(config, (option, name) => {
+    if (is_function(option)) {
       rules[name] = (value) => option(value);
     } else {
-      const args = isArray(option) ? option : [option];
+      const args = is_array(option) ? option : [option];
       const fn = getRuleFunction(name);
       rules[name] = (value) => fn(value, ...args);
     }
@@ -122,11 +122,11 @@ function parseStringRules(config) {
   const defs = config.split(ruleSeparator).filter((v) => v);
   const rules = {};
 
-  forEach(defs, (data) => {
+  for_each(defs, (data) => {
     const parts = data.split(ruleParamSeparator);
     const name = parts[0].trim();
     const fn = getRuleFunction(name);
-    const args = isString(parts[1]) ? parts[1].split(paramsSeparator) : [];
+    const args = is_string(parts[1]) ? parts[1].split(paramsSeparator) : [];
     rules[name] = (value) => fn(value, ...args);
   });
 

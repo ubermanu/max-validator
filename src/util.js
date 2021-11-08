@@ -2,15 +2,15 @@
  * @param {*} o
  * @return {boolean}
  */
-export function isPlainObject(o) {
-  return typeof o === 'object' && !isArray(o) && o != null;
+export function is_plain_object(o) {
+  return typeof o === 'object' && !is_array(o) && o != null;
 }
 
 /**
  * @param {*} a
  * @return {boolean}
  */
-export function isArray(a) {
+export function is_array(a) {
   return Array.isArray(a);
 }
 
@@ -18,7 +18,7 @@ export function isArray(a) {
  * @param {*} fn
  * @return {boolean}
  */
-export function isFunction(fn) {
+export function is_function(fn) {
   return typeof fn === 'function';
 }
 
@@ -26,7 +26,7 @@ export function isFunction(fn) {
  * @param {*} str
  * @return {boolean}
  */
-export function isString(str) {
+export function is_string(str) {
   return typeof str === 'string';
 }
 
@@ -34,7 +34,7 @@ export function isString(str) {
  * @param {*} num
  * @return {boolean}
  */
-export function isNumber(num) {
+export function is_number(num) {
   return typeof num === 'number';
 }
 
@@ -43,7 +43,7 @@ export function isNumber(num) {
  * @param {object} o
  * @param {function} fn
  */
-export function forEach(o, fn) {
+export function for_each(o, fn) {
   Object.entries(o).forEach(([k, v]) => fn(v, k));
 }
 
@@ -53,7 +53,7 @@ export function forEach(o, fn) {
  * @return {*|number}
  */
 export function size(o) {
-  return isArray(o) ? o.length : keys(o).length;
+  return is_array(o) ? o.length : keys(o).length;
 }
 
 /**
@@ -62,8 +62,8 @@ export function size(o) {
  * @param {function|string} fn
  * @return {object}
  */
-export function mapValues(o, fn) {
-  if (isString(fn)) {
+export function map_values(o, fn) {
+  if (is_string(fn)) {
     fn = (item) => item[fn];
   }
   return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, fn(v, k)]));
@@ -76,7 +76,7 @@ export function mapValues(o, fn) {
  * @return {array}
  */
 export function map(o, fn) {
-  return Object.values(mapValues(o, fn));
+  return Object.values(map_values(o, fn));
 }
 
 /**

@@ -1,4 +1,4 @@
-import { has, isArray, isPlainObject, isString, size } from './util';
+import { has, is_array, is_plain_object, is_string, size } from './util';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -33,7 +33,7 @@ export let functions = {
    * @return {boolean|{}}
    */
   array(value) {
-    return isArray(value) || {};
+    return is_array(value) || {};
   },
 
   /**
@@ -43,7 +43,7 @@ export let functions = {
    * @return {{from, to, value}|boolean}
    */
   between(value, from, to) {
-    if (isString(value)) {
+    if (is_string(value)) {
       value = value.length;
     }
     return (value >= from && value <= to) || { from, to, value };
@@ -73,7 +73,7 @@ export let functions = {
    * @return {{value_to_contain: *}|boolean}
    */
   contains_all(value, ...values) {
-    if (!isArray(value)) {
+    if (!is_array(value)) {
       value = String(value);
     }
     for (let i = 0, l = values.length; i < l; i++) {
@@ -90,7 +90,7 @@ export let functions = {
    * @return {boolean|{value_to_contain: string}}
    */
   contains_one(value, ...values) {
-    if (!isArray(value)) {
+    if (!is_array(value)) {
       value = String(value);
     }
     for (let i = 0, l = values.length; i < l; i++) {
@@ -184,7 +184,7 @@ export let functions = {
    * @return {{max}|boolean}
    */
   max(value, max) {
-    return (isString(value) ? value.length : value) <= max || { max };
+    return (is_string(value) ? value.length : value) <= max || { max };
   },
 
   /**
@@ -193,7 +193,7 @@ export let functions = {
    * @return {{min}|boolean}
    */
   min(value, min) {
-    return (isString(value) ? value.length : value) >= min || { min };
+    return (is_string(value) ? value.length : value) >= min || { min };
   },
 
   /**
@@ -227,7 +227,7 @@ export let functions = {
    * @return {boolean|{value}}
    */
   object(value) {
-    return isPlainObject(value) || { value };
+    return is_plain_object(value) || { value };
   },
 
   /**
@@ -257,7 +257,7 @@ export let functions = {
    * @return {boolean|{value}}
    */
   string(value) {
-    return isString(value) || { value };
+    return is_string(value) || { value };
   },
 
   /**

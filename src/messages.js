@@ -1,4 +1,4 @@
-import { has, isPlainObject, isString, reduce } from './util';
+import { has, is_plain_object, is_string, reduce } from './util';
 
 /**
  * @type {string}
@@ -42,7 +42,7 @@ export let messages = {
  * @param {object} m
  */
 export function setMessages(m) {
-  if (!isPlainObject(m)) {
+  if (!is_plain_object(m)) {
     throw 'The messages must be an object';
   }
   Object.assign(messages, m);
@@ -52,7 +52,7 @@ export function setMessages(m) {
  * @param {string} m
  */
 export function setDefaultMessage(m) {
-  if (!isString(m)) {
+  if (!is_string(m)) {
     throw 'The default message must be a string';
   }
   defaultMessage = m;
