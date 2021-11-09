@@ -17,7 +17,6 @@ export class Schema {
 
     forEach(this.ruleset, (checks: any, field: string) => {
       forEach(checks, (rule: Rule) => {
-        // @ts-ignore
         if (rule.test(model[field])) {
           return
         } else {

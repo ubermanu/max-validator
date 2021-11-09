@@ -12,7 +12,6 @@ export class RulesetParser {
 
   constructor() {
     for (let k in initialRules) {
-      // @ts-ignore
       this.rules.set(k, initialRules[k])
     }
   }

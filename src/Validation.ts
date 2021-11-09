@@ -1,17 +1,13 @@
-import { has, size } from './util'
+import { first, has, size } from './util'
 
-/**
- * FIXME: Remove the ts-ignore markups
- */
+// TODO: Use a better error management system (with short accessors)
 export class Validation {
   protected errors: object = {}
 
   public addError(field: string, ruleName: string, message: string) {
     if (!has(this.errors, field)) {
-      // @ts-ignore
       this.errors[field] = []
     }
-    // @ts-ignore
     this.errors[field][ruleName] = message
     return this
   }
@@ -28,15 +24,16 @@ export class Validation {
     return this.getError(field, ruleName) !== undefined
   }
 
-  public getError(field: string, ruleName: string = null): string {
+  public getError(field: string, ruleName: any = null): string {
     if (!has(this.errors, field)) {
       return undefined
     }
-    if (ruleName) {
-      // @ts-ignore
-      return has(this.errors[field], ruleName) ? this.errors[field][ruleName] : undefined
+    if (ruleName == null) {
+      return first(this.errors[field])
     }
-    // @ts-ignore
-    return this.errors[field].join(', ')
+    if (ruleName == true) {
+      return this.errors[field].join(', ')
+    }
+    return has(this.errors[field], ruleName) ? this.errors[field][ruleName] : undefined
   }
 }
