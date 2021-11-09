@@ -15,8 +15,10 @@
   "repository": "git+https://github.com/ubermanu/max-validator.git",
   "main": "dist/max-validator.js",
   "module": "dist/max-validator.es.js",
+  "types": "types/index.d.ts",
   "files": [
-    "dist/**/*"
+    "dist/*",
+    "types/*"
   ],
   "scripts": {
     "prepublishOnly": "rm dist/* -f && npm run build",
