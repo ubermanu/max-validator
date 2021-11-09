@@ -1,6 +1,6 @@
 {
   "name": "@shrnts/max-validator",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Small validation library based on schema",
   "keywords": [
     "validation",
