@@ -37,7 +37,9 @@ it('should throw and error if the validation method does not exist', () => {
 })
 
 it('should be extended with custom rule', () => {
-  v.extend('custom_rule', (value: any) => value === 'test', 'Error, :name cant be :value')
+  v.extend('custom_rule', function (value: any) {
+    return value === 'test' || 'Error, %0 must be "test"'
+  })
 
   const schema = { name: 'custom_rule' }
   v.setSchema(schema)
