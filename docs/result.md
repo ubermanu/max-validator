@@ -1,10 +1,9 @@
-# Result
+# Validation
 
 The validation result object contains many properties:
 
 ```js
-result.hasError // Boolean
-result.errors // Map
+result.hasErrors() // Boolean
 result.isError(prop) // Boolean
 result.getError(prop) // String
 ```

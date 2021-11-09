@@ -1,5 +1,11 @@
 # Customize
 
+The following examples uses an instance of the validator called `v`
+
+```js
+const v = new Validator()
+```
+
 ## Rule
 
 You can extend the validator by adding your own rules.
@@ -23,16 +29,7 @@ v.extend(
 
 ## Message
 
-You can override or add new error messages
-
-```js
-v.setMessages({
-  required: 'This value is necessary!',
-  // ...
-})
-```
-
-Or update the default error message
+You can update the default error message
 
 ```js
 v.setDefaultMessage('There is an error there...');

@@ -3,8 +3,18 @@
 The validator takes into account 2 parameters: a `schema` definition and an `object`:
 
 ```js
-import v from '@shrnts/max-validator'
-const result = v.validate(object, schema)
+import Validator from '@shrnts/max-validator'
+
+const v = new Validator(schema)
+const result = v.validate(object)
+```
+
+On a side note, a common validator is available, if you don't need anything specific.
+
+```js
+import { validate } from '@shrnts/max-validator'
+
+const result = validate(object, schema)
 ```
 
 ## Schema
@@ -40,10 +50,10 @@ For more information about this, see the [schema](schema.md) section.
 
 ## Result
 
-The `result` variable contains an object with possible errors:
+The `result` variable contains a validation object with possible errors:
 
 ```js
-result.hasError // Boolean
+result.hasErrors() // Boolean
 ```
 
 For more information about this, see the [result](result.md) section.
