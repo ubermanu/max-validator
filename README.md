@@ -13,7 +13,7 @@ npm i @shrtns/max-validator
 ## Quick Start
 
 ```js
-import v from '@shrtns/max-validator'
+import { validate } from 'https://cdn.skypack.dev/@shrnts/max-validator'
 
 const user = {
     firstname: 'John',
@@ -27,7 +27,7 @@ const schema = {
     age: 'number',
 }
 
-const result = v.validate(user, schema)
+const result = validate(user, schema)
 ```
 
 You can check out the [docs](https://ubermanu.github.io/max-validator) for more information.
