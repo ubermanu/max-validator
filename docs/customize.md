@@ -21,8 +21,7 @@ The following example implement a PG13 check for movies:
 ```js
 v.extend(
     'pg13',
-    (value, ...params) => (value >= 13 || { value }),
-    '%0 must be higher than 13'
+    (value, ...params) => value >= 13 || '%0 must be higher than 13'
 )
 ```
 
