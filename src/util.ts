@@ -55,5 +55,8 @@ export function has(object: object, key: string): boolean {
 }
 
 export function first(array: any[]): any {
+  if (isPlainObject(array)) {
+    array = Object.values(array)
+  }
   return array != null && array.length ? array[0] : undefined
 }
