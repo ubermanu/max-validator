@@ -30,3 +30,15 @@ it('should return a success in anonymous functions', () => {
   expect(rule.validate('name', 'test123')).toBe(true)
   expect(rule.validate('name', 'John')).toBe('should start with test')
 })
+
+it('should return a list of the params (except first)', () => {
+  const rule = new ConfiguredRule(
+    'test',
+    function () {
+      return 'List: %%'
+    },
+    ['a', 'b', 'c']
+  )
+
+  expect(rule.validate('name', 'Whatever')).toBe('List: a, b, c')
+})
