@@ -11,7 +11,7 @@
   "contributors": [
     "Emmanuel Vodor <manu@paca.happy-dev.fr>"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "repository": "git+https://github.com/ubermanu/max-validator.git",
   "main": "dist/max-validator.js",
   "module": "dist/max-validator.es.js",
