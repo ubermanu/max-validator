@@ -16,8 +16,12 @@ export class Validation {
     return this
   }
 
-  public hasError(): boolean {
-    return size(this.errors) > 0
+  public getErrorCount() {
+    return size(this.errors)
+  }
+
+  public hasErrors(): boolean {
+    return this.getErrorCount() > 0
   }
 
   public isError(field: string, ruleName: string = null): boolean {

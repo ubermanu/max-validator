@@ -13,7 +13,7 @@ it('should validate an object', () => {
     age: 'numeric',
   }
 
-  expect(v.setSchema(schema).validate(data).hasError()).toBe(false)
+  expect(v.setSchema(schema).validate(data).hasErrors()).toBe(false)
 })
 
 it('should get errors on failed validation', () => {
@@ -25,7 +25,7 @@ it('should get errors on failed validation', () => {
     age: 'numeric|required',
   }
 
-  expect(v.setSchema(schema).validate(data).hasError()).toBe(true)
+  expect(v.setSchema(schema).validate(data).hasErrors()).toBe(true)
 })
 
 it('should throw and error if the validation method does not exist', () => {
@@ -42,8 +42,8 @@ it('should be extended with custom rule', () => {
   const schema = { name: 'custom_rule' }
   v.setSchema(schema)
 
-  expect(v.validate({ name: 'test' }).hasError()).toBe(false)
-  expect(v.validate({ name: 'not_test' }).hasError()).toBe(true)
+  expect(v.validate({ name: 'test' }).hasErrors()).toBe(false)
+  expect(v.validate({ name: 'not_test' }).hasErrors()).toBe(true)
 })
 
 it('should return a validation result with correct data', () => {
