@@ -1,6 +1,6 @@
+import { Rule } from './Rule'
 import { Validation } from './Validation'
 import { forEach } from './util'
-import { Rule } from './Rule'
 
 export class Schema {
   ruleset: Rule[][]
@@ -12,16 +12,16 @@ export class Schema {
   /**
    * Validate the given data against the schema.
    */
-  public validate(data: object): Validation {
+  public validate(model: object): Validation {
     const validation = new Validation()
 
-    forEach(this.ruleset, (checks: any, propName: string) => {
+    forEach(this.ruleset, (checks: any, field: string) => {
       forEach(checks, (rule: Rule) => {
         // @ts-ignore
-        if (rule.test(data[propName])) {
+        if (rule.test(model[field])) {
           return
         } else {
-          validation.addError(propName, rule.getName(), rule.getErrorMessage())
+          validation.addError(field, rule.getName(), rule.getErrorMessage(field))
         }
       })
     })

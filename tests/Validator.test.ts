@@ -37,11 +37,7 @@ it('should throw and error if the validation method does not exist', () => {
 })
 
 it('should be extended with custom rule', () => {
-  v.extend(
-    'custom_rule',
-    (value: any) => value === 'test' || { value },
-    'Default Error Message: :name cant be :value'
-  )
+  v.extend('custom_rule', (value: any) => value === 'test', 'Error, :name cant be :value')
 
   const schema = { name: 'custom_rule' }
   v.setSchema(schema)
@@ -50,22 +46,22 @@ it('should be extended with custom rule', () => {
   expect(v.validate({ name: 'not_test' }).hasError()).toBe(true)
 })
 
-// it('should return a validation result with correct data', () => {
-//   const data = {
-//     name: 'test',
-//     age: 40,
-//   }
-//   const schema = {
-//     name: 'required|string|min:40|starts_with:Ga',
-//     age: 'numeric',
-//   }
-//   v.setSchema(schema)
-//
-//   expect(v.validate(data).isError('name')).toBe(true)
-//   expect(v.validate(data).isError('name')).toBe(false)
-//
-//   expect(v.validate(data).isError('name', 'required')).toBe(false)
-//   expect(v.validate(data).isError('name', 'string')).toBe(false)
-//   expect(v.validate(data).isError('name', 'min')).toBe(true)
-//   expect(v.validate(data).isError('name', 'starts_with')).toBe(true)
-// })
+it('should return a validation result with correct data', () => {
+  const data = {
+    name: 'test',
+    age: 40,
+  }
+  const schema = {
+    name: 'required|string|min:40|starts_with:Ga',
+    age: 'numeric',
+  }
+  v.setSchema(schema)
+
+  expect(v.validate(data).isError('name')).toBe(true)
+  expect(v.validate(data).isError('name')).not.toBe(false)
+
+  expect(v.validate(data).isError('name', 'required')).toBe(false)
+  expect(v.validate(data).isError('name', 'string')).toBe(false)
+  expect(v.validate(data).isError('name', 'min')).toBe(true)
+  expect(v.validate(data).isError('name', 'starts_with')).toBe(true)
+})
