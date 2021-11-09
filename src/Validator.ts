@@ -12,8 +12,20 @@ export class Validator {
     }
   }
 
+  /**
+   * If the `errorMessage` is defined, wrap the method with it.
+   * TODO: Remove the errorMessage argument.
+   */
   public extend(name: string, method: Function, errorMessage: string = null) {
-    const rule = new Rule(name, method, errorMessage)
+    if (errorMessage) {
+      console.warn(
+        'Validator.extend: errorMessage argument is deprecated. Your method should return the error message instead.'
+      )
+      const baseMethod = method
+      method = (...args: any[]) => baseMethod(...args) === true || errorMessage
+    }
+
+    const rule = new Rule(name, method)
     this.rulesetParser.addRule(rule)
     return this
   }
