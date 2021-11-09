@@ -3,24 +3,26 @@ import { reduce } from './util'
 export class Rule {
   protected name: string
   protected method: Function
-  protected errorMessage: string = null
 
-  constructor(name: string, method: Function, errorMessage: string = '') {
+  constructor(name: string, method: Function) {
     this.name = name
     this.method = method
-    this.errorMessage = errorMessage
   }
 
-  public getName() {
+  public getName(): string {
     return this.name
   }
 
   /**
    * Return the error message formatted with the rule's params.
    * The first param should be the name of the field (e.g. 'name' or 'age').
+   * The `%%` placeholder will be replaced with a comma separated list of params (except the first one).
    */
-  public formatErrorMessage(params: any[]): string {
-    return reduce(params, (m: any, val: any, key: any) => m.replace(`%${key}`, val), this.errorMessage)
+  public formatErrorMessage(message: string, params: any[]): string {
+    return reduce(params, (m: any, val: any, key: any) => m.replace(`%${key}`, val), message).replace(
+      '%%',
+      params.slice(1).join(', ')
+    )
   }
 
   /**
@@ -35,7 +37,7 @@ export class Rule {
    * This is useful when you want to use the same rule for multiple fields.
    */
   public configure(params: any[] = []): ConfiguredRule {
-    return new ConfiguredRule(this.name, this.method, params, this.errorMessage)
+    return new ConfiguredRule(this.name, this.method, params)
   }
 }
 
@@ -50,10 +52,16 @@ export class ConfiguredRule extends Rule {
   /**
    * Note: The rule's method now handle 2 arguments: the field name and the value.
    */
-  constructor(name: string, method: Function, params: any[] = [], errorMessage: string = '') {
-    super(name, method, errorMessage)
+  constructor(name: string, method: Function, params: any[] = []) {
+    super(name, method)
     this.params = params
-    this.method = (field, value) => method(value, ...params) || this.formatErrorMessage([field, ...params])
+    this.method = (field, value) => {
+      const res = method(value, ...params)
+      if (typeof res === 'string') {
+        return this.formatErrorMessage(res, [field, ...params])
+      }
+      return !!res
+    }
   }
 
   /**
@@ -67,7 +75,7 @@ export class ConfiguredRule extends Rule {
   /**
    * Return itself, configured to work with specific params.
    */
-  public configure(params: any[] = []): this {
+  public configure(): this {
     console.warn('You cannot configure a rule more than once.')
     return this
   }

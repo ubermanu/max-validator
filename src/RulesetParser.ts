@@ -1,5 +1,5 @@
 import { forEach, isArray, isFunction, isPlainObject, isString, mapValues } from './util'
-import * as initialRules from './initialRules'
+import * as functions from './functions'
 import { Rule } from './Rule'
 
 let anonymousIndex = 0
@@ -16,8 +16,9 @@ export class RulesetParser {
   rules: Map<string, Rule> = new Map()
 
   constructor() {
-    for (let k in initialRules) {
-      this.rules.set(k, initialRules[k])
+    for (let name in functions) {
+      const rule = new Rule(name, functions[name])
+      this.rules.set(name, rule)
     }
   }
 
@@ -73,7 +74,7 @@ export class RulesetParser {
       if (isString(definition)) {
         rules = rules.concat(this.parseStringDefinitions(definition))
       } else if (isFunction(definition)) {
-        const rule = new Rule(`anonymous_${anonymousIndex++}`, definition, this.defaultMessage)
+        const rule = new Rule(`anonymous_${anonymousIndex++}`, (value: any) => definition(value) || this.defaultMessage)
         rules.push(rule.configure())
       } else {
         throw new Error(`Couldn't parse the schema, unsupported rule type: ${typeof definition}`)
@@ -91,7 +92,7 @@ export class RulesetParser {
 
     forEach(config, (definition: any, name: string) => {
       if (isFunction(definition)) {
-        const rule = new Rule(name, (value: any) => definition(value), this.defaultMessage)
+        const rule = new Rule(name, (value: any) => definition(value) || this.defaultMessage)
         rules.push(rule.configure())
       } else {
         const args = isArray(definition) ? definition : [definition]
