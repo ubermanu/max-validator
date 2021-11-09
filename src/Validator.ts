@@ -33,6 +33,8 @@ export class Validator {
     return this
   }
 
+  // TODO: Add a method to update the message of any initial rule
+  // TODO: Add support for localization
   public setMessages(messages: object) {
     console.warn('Validator.setMessages is deprecated.')
     return this

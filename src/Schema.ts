@@ -1,4 +1,4 @@
-import { Rule } from './Rule'
+import { ConfiguredRule, Rule } from './Rule'
 import { Validation } from './Validation'
 import { forEach } from './util'
 
@@ -16,8 +16,8 @@ export class Schema {
     const validation = new Validation()
 
     forEach(this.ruleset, (checks: any, field: string) => {
-      forEach(checks, (rule: Rule) => {
-        const res = rule.method(field, model[field])
+      forEach(checks, (rule: ConfiguredRule) => {
+        const res = rule.validate(field, model[field])
         if (res === true) {
           return
         } else {

@@ -22,10 +22,10 @@ export class RulesetParser {
   }
 
   public addRule(rule: Rule): this {
-    if (this.rules.has(rule.name)) {
-      throw new Error(`The validation method "${rule.name}" already exists`)
+    if (this.rules.has(rule.getName())) {
+      throw new Error(`The validation method "${rule.getName()}" already exists`)
     }
-    this.rules.set(rule.name, rule)
+    this.rules.set(rule.getName(), rule)
     return this
   }
 
