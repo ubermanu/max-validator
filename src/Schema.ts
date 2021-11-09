@@ -17,10 +17,11 @@ export class Schema {
 
     forEach(this.ruleset, (checks: any, field: string) => {
       forEach(checks, (rule: Rule) => {
-        if (rule.test(model[field])) {
+        const res = rule.method(field, model[field])
+        if (res === true) {
           return
         } else {
-          validation.addError(field, rule.getName(), rule.getErrorMessage(field))
+          validation.addError(field, rule.getName(), res)
         }
       })
     })

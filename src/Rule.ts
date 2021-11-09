@@ -3,7 +3,6 @@ import { reduce } from './util'
 export class Rule {
   name: string
   method: Function
-  params: any[] = []
   errorMessage: string = null
 
   constructor(name: string, method: Function, errorMessage: string = '') {
@@ -12,31 +11,32 @@ export class Rule {
     this.errorMessage = errorMessage
   }
 
-  public setParams(...params: any) {
-    this.params = params
-    return this
-  }
-
   public getName() {
     return this.name
   }
 
   /**
    * Return the error message formatted with the rule's params.
-   * The first param is the name of the rule (e.g. 'required').
+   * The first param should be the name of the field (e.g. 'name' or 'age').
    */
-  public getErrorMessage(fieldName: string) {
-    return reduce(
-      [fieldName, ...this.params],
-      (m: any, val: any, key: any) => m.replace(`%${key}`, val),
-      this.errorMessage
-    )
+  public formatErrorMessage(params: any[]): string {
+    return reduce(params, (m: any, val: any, key: any) => m.replace(`%${key}`, val), this.errorMessage)
   }
 
   /**
    * Returns TRUE if the rule passes.
    */
   public test(value: any, ...params: any): boolean {
-    return this.method(value, ...(params || this.params)) === true
+    return this.method(value, ...params) === true
+  }
+
+  /**
+   * Return a copy of the rule, configured to work with specific params.
+   * This is useful when you want to use the same rule for multiple fields.
+   * Note: The rule's method now handle 2 arguments: the field name and the value.
+   */
+  public configure(params: any = []) {
+    const method = (field, value) => this.method(value, ...params) || this.formatErrorMessage([field, ...params])
+    return new Rule(this.name, method, this.errorMessage)
   }
 }

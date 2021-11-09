@@ -4,10 +4,15 @@ import { Rule } from './Rule'
 
 let anonymousIndex = 0
 
+export interface RulesetInterface {
+  [key: string]: any
+}
+
 export class RulesetParser {
   ruleSeparator = '|'
   ruleParamSeparator = ':'
   paramsSeparator = ','
+  defaultMessage: string = 'Invalid value'
   rules: Map<string, Rule> = new Map()
 
   constructor() {
@@ -21,6 +26,11 @@ export class RulesetParser {
       throw new Error(`The validation method "${rule.name}" already exists`)
     }
     this.rules.set(rule.name, rule)
+    return this
+  }
+
+  public setDefaultMessage(message: string): this {
+    this.defaultMessage = message
     return this
   }
 
@@ -39,7 +49,7 @@ export class RulesetParser {
     return this
   }
 
-  public parse(config: object): Rule[][] {
+  public parse(config: RulesetInterface): Rule[][] {
     // @ts-ignore
     return mapValues(config, (definitions: any, prop: string) => {
       if (isString(definitions)) {
@@ -63,9 +73,8 @@ export class RulesetParser {
       if (isString(definition)) {
         rules = rules.concat(this.parseStringDefinitions(definition))
       } else if (isFunction(definition)) {
-        const name = `anonymous_${anonymousIndex++}`
-        const rule = new Rule(name, definition)
-        rules.push(rule)
+        const rule = new Rule(`anonymous_${anonymousIndex++}`, definition, this.defaultMessage)
+        rules.push(rule.configure())
       } else {
         throw new Error(`Couldn't parse the schema, unsupported rule type: ${typeof definition}`)
       }
@@ -82,13 +91,12 @@ export class RulesetParser {
 
     forEach(config, (definition: any, name: string) => {
       if (isFunction(definition)) {
-        const rule = new Rule(name, (value: any) => definition(value))
-        rules.push(rule)
+        const rule = new Rule(name, (value: any) => definition(value), this.defaultMessage)
+        rules.push(rule.configure())
       } else {
         const args = isArray(definition) ? definition : [definition]
-        const fn = this.getRule(name).method
-        const rule = new Rule(name, (value: any) => fn(value, ...args))
-        rules.push(rule)
+        const rule = this.getRule(name)
+        rules.push(rule.configure(args))
       }
     })
 
@@ -105,10 +113,9 @@ export class RulesetParser {
     forEach(defs, (definition: string) => {
       const parts = definition.split(this.ruleParamSeparator)
       const name = parts[0].trim()
-      const fn = this.getRule(name).method
+      const rule = this.getRule(name)
       const args = isString(parts[1]) ? parts[1].split(this.paramsSeparator) : []
-      const rule = new Rule(name, (value: any) => fn(value, ...args))
-      rules.push(rule)
+      rules.push(rule.configure(args))
     })
 
     return rules

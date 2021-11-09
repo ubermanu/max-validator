@@ -6,12 +6,13 @@ export class Validation {
 
   public addError(field: string, ruleName: string, message: string) {
     if (!has(this.errors, field)) {
-      this.errors[field] = []
+      this.errors[field] = {}
     }
     this.errors[field][ruleName] = message
     return this
   }
 
+  // TODO: Iterate through all the fields
   public getErrorCount() {
     return size(this.errors)
   }

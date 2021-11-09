@@ -1,25 +1,24 @@
 import { Schema } from './Schema'
-import { RulesetParser } from './RulesetParser'
+import { RulesetInterface, RulesetParser } from './RulesetParser'
 import { Rule } from './Rule'
 
 export class Validator {
   schema: Schema = null
-  defaultMessage: string = 'Invalid value'
   rulesetParser: RulesetParser = new RulesetParser()
 
-  constructor(schema: object = null) {
+  constructor(schema: RulesetInterface = null) {
     if (schema !== null) {
       this.setSchema(schema)
     }
   }
 
   public extend(name: string, method: Function, errorMessage: string = null) {
-    const rule = new Rule(name, method, errorMessage || this.defaultMessage)
+    const rule = new Rule(name, method, errorMessage)
     this.rulesetParser.addRule(rule)
     return this
   }
 
-  public setSchema(schema: object) {
+  public setSchema(schema: RulesetInterface) {
     const ruleset = this.rulesetParser.parse(schema)
     this.schema = new Schema(ruleset)
     return this
@@ -30,7 +29,7 @@ export class Validator {
   }
 
   public setDefaultMessage(message: string) {
-    this.defaultMessage = message
+    this.rulesetParser.setDefaultMessage(message)
     return this
   }
 
