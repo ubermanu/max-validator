@@ -78,3 +78,18 @@ it('should skip validation if not required and empty', () => {
   expect(v.validate({ age: undefined }).isError('age')).not.toBe(true)
   expect(v.validate({ age: false }).isError('age')).not.toBe(true)
 })
+
+// https://github.com/malkhazidartsmelidze/max-validator/issues/15
+it('should work with the required rule alone', () => {
+  const schema = {
+    age: 'required',
+  }
+  v.setSchema(schema)
+
+  expect(v.validate({ age: false }).isError('age')).toBe(true)
+  expect(v.validate({ age: null }).isError('age')).toBe(true)
+  expect(v.validate({ age: undefined }).isError('age')).toBe(true)
+
+  expect(v.validate({ age: 'some_string' }).isError('age')).not.toBe(true)
+  expect(v.validate({ age: 1234 }).isError('age')).not.toBe(true)
+})
