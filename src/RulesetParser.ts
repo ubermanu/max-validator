@@ -1,4 +1,4 @@
-import { forEach, isArray, isFunction, isPlainObject, isString, mapValues } from './util'
+import { isArray, isFunction, isPlainObject, isString, mapValues } from './util'
 import * as functions from './functions'
 import { ConfiguredRule, Rule } from './Rule'
 
@@ -91,7 +91,7 @@ export class RulesetParser {
   protected parseArrayDefinitions(config: any[]): ConfiguredRule[] {
     let rules: ConfiguredRule[] = []
 
-    forEach(config, (definition: any) => {
+    for (let definition of config) {
       if (isString(definition)) {
         rules = rules.concat(this.parseStringDefinitions(definition))
       } else if (isFunction(definition)) {
@@ -100,7 +100,7 @@ export class RulesetParser {
       } else {
         throw new Error(`Couldn't parse the schema, unsupported rule type: ${typeof definition}`)
       }
-    })
+    }
 
     return rules
   }
@@ -111,7 +111,8 @@ export class RulesetParser {
   protected parseObjectDefinitions(config: object): ConfiguredRule[] {
     let rules: ConfiguredRule[] = []
 
-    forEach(config, (definition: any, name: string) => {
+    for (let name in config) {
+      const definition = config[name]
       if (isFunction(definition)) {
         const rule = new Rule(name, (value: any) => definition(value) || this.defaultMessage)
         rules.push(rule.configure())
@@ -120,7 +121,7 @@ export class RulesetParser {
         const rule = this.getRule(name)
         rules.push(rule.configure(args))
       }
-    })
+    }
 
     return rules
   }
@@ -132,13 +133,13 @@ export class RulesetParser {
     const defs = config.split(this.ruleSeparator).filter((v) => v)
     const rules: ConfiguredRule[] = []
 
-    forEach(defs, (definition: string) => {
+    for (let definition of defs) {
       const parts = definition.split(this.ruleParamSeparator)
       const name = parts[0].trim()
       const rule = this.getRule(name)
       const args = isString(parts[1]) ? parts[1].split(this.paramsSeparator) : []
       rules.push(rule.configure(args))
-    })
+    }
 
     return rules
   }
