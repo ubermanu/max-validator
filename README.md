@@ -27,7 +27,8 @@ const schema = {
     age: 'number',
 }
 
-const result = validate(user, schema)
+const validation = validate(user, schema)
+console.log(validation.passed()) // true
 ```
 
 You can check out the [docs](https://ubermanu.github.io/max-validator) for more information.
