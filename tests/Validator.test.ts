@@ -67,3 +67,14 @@ it('should return a validation result with correct data', () => {
   expect(v.validate(data).isError('name', 'min')).toBe(true)
   expect(v.validate(data).isError('name', 'starts_with')).toBe(true)
 })
+
+it('should skip validation if not required and empty', () => {
+  const schema = {
+    age: 'numeric',
+  }
+  v.setSchema(schema)
+
+  expect(v.validate({ age: null }).isError('age')).not.toBe(true)
+  expect(v.validate({ age: undefined }).isError('age')).not.toBe(true)
+  expect(v.validate({ age: false }).isError('age')).not.toBe(true)
+})

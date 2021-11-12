@@ -1,6 +1,6 @@
 import { forEach, isArray, isFunction, isPlainObject, isString, mapValues } from './util'
 import * as functions from './functions'
-import { Rule } from './Rule'
+import { ConfiguredRule, Rule } from './Rule'
 
 let anonymousIndex = 0
 
@@ -9,11 +9,11 @@ export interface RulesetInterface {
 }
 
 export class RulesetParser {
-  ruleSeparator = '|'
-  ruleParamSeparator = ':'
-  paramsSeparator = ','
-  defaultMessage: string = 'Invalid value'
-  rules: Map<string, Rule> = new Map()
+  protected ruleSeparator = '|'
+  protected ruleParamSeparator = ':'
+  protected paramsSeparator = ','
+  protected defaultMessage: string = 'Invalid value'
+  protected rules: Map<string, Rule> = new Map()
 
   constructor() {
     for (let name in functions) {
@@ -50,25 +50,46 @@ export class RulesetParser {
     return this
   }
 
-  public parse(config: RulesetInterface): Rule[][] {
+  public parse(config: RulesetInterface): ConfiguredRule[][] {
     // @ts-ignore
     return mapValues(config, (definitions: any, prop: string) => {
+      let rules: Rule[] = []
+
       if (isString(definitions)) {
-        return this.parseStringDefinitions(definitions)
+        rules = this.parseStringDefinitions(definitions)
       } else if (isArray(definitions)) {
-        return this.parseArrayDefinitions(definitions)
+        rules = this.parseArrayDefinitions(definitions)
       } else if (isPlainObject(definitions)) {
-        return this.parseObjectDefinitions(definitions)
+        rules = this.parseObjectDefinitions(definitions)
       }
-      throw new Error(`Invalid rules for ${prop}`)
+
+      if (rules.length === 0) {
+        throw new Error(`Invalid rules for ${prop}`)
+      }
+
+      const priorityRules = ['required', 'optional']
+
+      // Move the required rule to the beginning of the list
+      // so we know if the following rules are required or not
+      rules = rules.sort((a, b) => {
+        if (priorityRules.includes(a.getName())) {
+          return -1
+        }
+        if (priorityRules.includes(b.getName())) {
+          return 1
+        }
+        return 0
+      })
+
+      return rules
     })
   }
 
   /**
    * @example ['required', 'max:20', fn() => {}]
    */
-  protected parseArrayDefinitions(config: any[]): Rule[] {
-    let rules: Rule[] = []
+  protected parseArrayDefinitions(config: any[]): ConfiguredRule[] {
+    let rules: ConfiguredRule[] = []
 
     forEach(config, (definition: any) => {
       if (isString(definition)) {
@@ -87,8 +108,8 @@ export class RulesetParser {
   /**
    * @example {required: true, in_array: [1, 2, 3, 4, 5] ... , fn() => {}}
    */
-  protected parseObjectDefinitions(config: object): Rule[] {
-    let rules: Rule[] = []
+  protected parseObjectDefinitions(config: object): ConfiguredRule[] {
+    let rules: ConfiguredRule[] = []
 
     forEach(config, (definition: any, name: string) => {
       if (isFunction(definition)) {
@@ -107,9 +128,9 @@ export class RulesetParser {
   /**
    * @example 'required|min:1|max:20'
    */
-  protected parseStringDefinitions(config: string): Rule[] {
+  protected parseStringDefinitions(config: string): ConfiguredRule[] {
     const defs = config.split(this.ruleSeparator).filter((v) => v)
-    const rules: Rule[] = []
+    const rules: ConfiguredRule[] = []
 
     forEach(defs, (definition: string) => {
       const parts = definition.split(this.ruleParamSeparator)
@@ -122,7 +143,7 @@ export class RulesetParser {
     return rules
   }
 
-  protected getRule(name: string) {
+  public getRule(name: string) {
     if (!this.rules.has(name)) {
       throw new Error(`The validation method "${name}" does not exist`)
     }

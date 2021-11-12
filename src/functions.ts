@@ -119,6 +119,10 @@ export const object = function (value: any) {
   return isPlainObject(value) || '%0 must be an object'
 }
 
+export const optional = function (value: any) {
+  return required(value) !== true
+}
+
 export const phone = function (value: any) {
   return phoneRegex.test(value) || '%0 must be a valid phone number'
 }
