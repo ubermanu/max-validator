@@ -1,5 +1,5 @@
 import { ConfiguredRule } from './Rule'
-import { Validation } from './Validation'
+import { Validation, ValidationBuilder } from './Validation'
 import { optional } from './functions'
 
 export class Schema {
@@ -13,7 +13,7 @@ export class Schema {
    * Validate the given data against the schema.
    */
   public validate(model: object): Validation {
-    const validation = new Validation()
+    const validationBuilder = ValidationBuilder.create()
     let required
 
     for (let field in this.ruleset) {
@@ -28,7 +28,7 @@ export class Schema {
         if (rule.getName() === 'required') {
           required = true
           if (res !== true) {
-            validation.addError(field, rule.getName(), res)
+            validationBuilder.addError(field, rule.getName(), res)
           }
           continue
         }
@@ -40,11 +40,11 @@ export class Schema {
         }
 
         if (required && res !== true) {
-          validation.addError(field, rule.getName(), res)
+          validationBuilder.addError(field, rule.getName(), res)
         }
       }
     }
 
-    return validation
+    return validationBuilder.build()
   }
 }

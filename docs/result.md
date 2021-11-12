@@ -3,9 +3,9 @@
 The validation result object contains many properties:
 
 ```js
-result.hasErrors() // Boolean
-result.isError(prop) // Boolean
-result.getError(prop) // String
+result.failed() // Boolean
+result.error(prop) // Boolean
+result.message(prop) // String
 ```
 
 ## Error
@@ -13,13 +13,13 @@ result.getError(prop) // String
 Check if a field has an error
 
 ```js
-result.isError('name')
+result.error('name')
 ```
 
 Check if a field has an error for a specific rule
 
 ```js
-result.isError('name', 'required')
+result.error('name', 'required')
 ```
 
 ## Error message
@@ -27,11 +27,11 @@ result.isError('name', 'required')
 Get first error message for a field
 
 ```js
-result.getError('name')
+result.message('name')
 ```
 
 Get all the error messages for a field (joined with comma)
 
 ```js
-result.getError('name', true)
+result.message('name', true)
 ```
