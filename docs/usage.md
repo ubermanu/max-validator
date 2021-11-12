@@ -34,7 +34,7 @@ const registerRequestScheme = {
 }
 ```
 ```js
-const formData ={
+const formData = {
     name: 'Malkhazi',
     lastname: 'Dartsmeldize',
     email: 'malkhazidartsmelidze@gmail.com',
@@ -53,7 +53,7 @@ For more information about this, see the [schema](schema.md) section.
 The `result` variable contains a validation object with possible errors:
 
 ```js
-result.hasErrors() // Boolean
+result.failed() // Boolean
 ```
 
 For more information about this, see the [result](result.md) section.
